@@ -1,5 +1,6 @@
 package api;
 
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -26,6 +27,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Получение списка пользователей")
     @DisplayName("Получение списка пользователей")
     void testGetUsersList() {
         given()
@@ -39,6 +41,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Получение пользователя по id")
     @DisplayName("Получение пользователя по id")
     void testGetSingleUser() {
         when()
@@ -50,6 +53,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Получение несуществующего пользователя")
     @DisplayName("Получение несуществующего пользователя")
     void testUserNotFound() {
         when()
@@ -59,6 +63,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Создание пользователя")
     @DisplayName("Создание пользователя")
     void testCreateUser() {
         String requestBody = """
@@ -80,6 +85,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Обновление пользователя")
     @DisplayName("Обновление пользователя")
     void testUpdateUser() {
         String requestBody = """
@@ -100,6 +106,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Удаление пользователя")
     @DisplayName("Удаление пользователя")
     void testDeleteUser() {
         when()
@@ -109,6 +116,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Успешный логин пользователя")
     @DisplayName("Успешный логин пользователя")
     void testSuccessfulLogin() {
         String requestBody = """
@@ -129,6 +137,7 @@ public class UserFormTests {
     }
 
     @Test
+    @Step("Некорректный логин пользователя")
     @DisplayName("Некорректный логин пользователя")
     void testUnsuccessfulLogin() {
         String requestBody = """

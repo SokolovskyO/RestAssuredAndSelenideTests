@@ -3,6 +3,9 @@ package ui;
 import com.codeborne.selenide.Browsers;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Step;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,9 +37,13 @@ public class FormTests {
     static void setupAll() {
         Configuration.browser = Browsers.CHROME;
         Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = "1920x1080";
+        Configuration.browserSize = "max";
         Configuration.pageLoadStrategy = "eager";
-        Configuration.headless = false;
+
+        // Attach screenshots and page source to Allure on failure
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
+                .screenshots(true)
+                .savePageSource(false));
     }
 
     @BeforeEach
@@ -48,6 +55,7 @@ public class FormTests {
     }
 
     @Test
+    @Step("Проверка успешной регистрации")
     @DisplayName("Проверка успешной регистрации")
     void registrationFormTest() {
         FormPage formPage = new FormPage();
@@ -68,6 +76,7 @@ public class FormTests {
     }
 
     @Test
+    @Step("Проверка отображения красной рамки, при незаполнении данных")
     @DisplayName("Проверка отображения красной рамки, при незаполнении данных")
     void fieldsShouldBeRedAfterValidErrorTest() {
         FormPage formPage = new FormPage();
@@ -76,6 +85,7 @@ public class FormTests {
     }
 
     @Test
+    @Step("Проверка выбора разных гендеров")
     @DisplayName("Проверка выбора разных гендеров")
     void shouldSelectDifferentGenders() {
         for (String gender : GENDER_LIST) {
@@ -97,6 +107,7 @@ public class FormTests {
     }
 
     @Test
+    @Step("Проверка выбора разных предметов")
     @DisplayName("Проверка выбора разных предметов")
     void shouldSelectDifferentSubjects() {
         for (String subject : SUBJECT_LIST) {
@@ -118,6 +129,7 @@ public class FormTests {
     }
 
     @Test
+    @Step("Проверка выбора разных штатов и городов")
     @DisplayName("Проверка выбора разных штатов и городов")
     void shouldSelectDifferentStatesAndCities() {
         for (String[] pair : STATE_CITY_PAIRS) {
