@@ -3,17 +3,22 @@ stages:
   - report
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS: "-Dmaven.repo.local=C:\\m2\\repository"
+  SHELL: ["pwsh", "-Command"]
 
 cache:
   paths:
-    - .m2/repository/
+    - C:/m2/repository/
     - target/
 
 # Запуск тестов
 run_tests:
   stage: test
-  image: maven:3.8.6-openjdk-17
+  tags:
+    - docker
+  image: mcr.microsoft.com/windowsservercore:ltsc2022
+  before_script:
+    - choco install maven -y --no-progress
   script:
     - mvn $MAVEN_CLI_OPTS clean test
   artifacts:
@@ -29,7 +34,11 @@ run_tests:
 # Генерация отчета Allure
 generate_report:
   stage: report
-  image: maven:3.8.6-openjdk-17
+  tags:
+    - docker
+  image: mcr.microsoft.com/windowsservercore:ltsc2022
+  before_script:
+    - choco install maven -y --no-progress
   script:
     - mvn allure:report
   artifacts:
