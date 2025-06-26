@@ -1,0 +1,41 @@
+stages:
+  - test
+  - report
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+# Запуск тестов
+run_tests:
+  stage: test
+  image: maven:3.8.6-openjdk-17
+  script:
+    - mvn $MAVEN_CLI_OPTS clean test
+  artifacts:
+    when: always
+    paths:
+      - target/allure-results/
+    reports:
+      junit: target/surefire-reports/**/*.xml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Генерация отчета Allure
+generate_report:
+  stage: report
+  image: maven:3.8.6-openjdk-17
+  script:
+    - mvn allure:report
+  artifacts:
+    paths:
+      - target/allure-report/
+    expire_in: 1 week
+  needs: ["run_tests"]
+  only:
+    - main
